@@ -9,96 +9,99 @@ const Calculator = () => {
   const [equalsClicked, setEqualsClicked] = useState(false);
   const [rightBegin, setRightBegin] = useState(false);
   const [zeroReset, setZeroReset] = useState(false);
-  const [sameSymbolClicked, setSameSymbolClicked] = useState("");
+  const [lastSymbolClicked, setLastSymbolClicked] = useState("");
   const [symbolClicked, setSymbolClicked] = useState(false);
 
   const addNum = (num) => {
-    if (num && zeroReset) {
-      null;
-    } else {
-      let arr = [input];
-      if (arr[0] === "0") {
-        arr.shift();
-      }
-      arr.push(num);
-      let result = arr.join("");
-      if (input.includes("=")) {
-        setOutput(0);
-      }
-      const lastNumRegex = /\d+$/;
-      let lastNum = result.match(lastNumRegex);
-      if (decimalClicked) {
-        const lastNumRegex = /[+\-*/]?(\d+\.?\d*)$/;
-        let lastNumMatch = result.match(lastNumRegex);
-        if (lastNumMatch) {
-          let lastNum = lastNumMatch[1];
+    if (input.length < 14) {
+      if (!num && zeroReset) {
+        null;
+      } else {
+        let arr = [input];
+        if (arr[0] === "0") {
+          arr.shift();
+        }
+        arr.push(num);
+        let result = arr.join("");
+        const lastNumRegex = /\d+$/;
+        let lastNum = result.match(lastNumRegex);
+        if (!decimalClicked) {
+          const lastNumRegex = /[+\-*/]?(\d+\.?\d*)$/;
+          let lastNumMatch = result.match(lastNumRegex);
+          if (lastNumMatch) {
+            let lastNum = lastNumMatch[1];
+            console.log(lastNum);
+            setInput(result);
+            setOutput(lastNum);
+            setCurrentNumber(lastNum);
+            setRightBegin(true);
+            setDecimalClicked(false);
+            setEqualsClicked(false);
+            setLastSymbolClicked("");
+            setSymbolClicked(false);
+            setZeroReset(false);
+          } else {
+            setInput(result);
+            setOutput(result);
+            setCurrentNumber(`${currentNumber}${lastNum}`);
+            setRightBegin(true);
+            setDecimalClicked(true);
+            setEqualsClicked(false);
+            setLastSymbolClicked("");
+            setZeroReset(false);
+          }
+        } else {
           setInput(result);
           setOutput(lastNum);
           setCurrentNumber(lastNum);
           setRightBegin(true);
           setDecimalClicked(true);
           setEqualsClicked(false);
-          setSameSymbolClicked("");
-          setZeroReset(false);
-        } else {
-          setInput(result);
-          setOutput(result);
-          setCurrentNumber(`${currentNumber}${lastNum}`);
-          setRightBegin(true);
-          setDecimalClicked(true);
-          setEqualsClicked(false);
-          setSameSymbolClicked("");
+          setLastSymbolClicked("");
           setZeroReset(false);
         }
-      } else {
-        setInput(result);
-        setOutput(lastNum);
-        setCurrentNumber(lastNum);
-        setRightBegin(true);
-        setDecimalClicked(true);
-        setEqualsClicked(false);
-        setSameSymbolClicked("");
-        setZeroReset(false);
       }
     }
   };
 
   const decimal = () => {
-    if (decimalClicked && sameSymbolClicked) {
-      setInput(`${input}.`);
-      setOutput(`${output}.`);
-      setCurrentNumber(`${currentNumber}.`);
-      setDecimalClicked(true);
-      setZeroReset(false);
-    } else if (equalsClicked) {
-      setInput("0.");
-      setOutput("0.");
-      setCurrentNumber("0.");
-      setDecimalClicked(true);
-      setZeroReset(false);
+    if (!output.includes(".")) {
+      if (decimalClicked) {
+        setInput(`${input}.`);
+        setOutput(`${output}.`);
+        setCurrentNumber(`${currentNumber}.`);
+        setDecimalClicked(true);
+        setZeroReset(false);
+      } //else if (equalsClicked) {
+      //   setInput("0.");
+      //   setOutput("0.");
+      //   setCurrentNumber("0.");
+      //   setDecimalClicked(true);
+      //   setZeroReset(false);
+      // }
     } else {
       console.log("Decimal error");
     }
   };
 
   const addOperator = (symb) => {
-    if (rightBegin && symb !== sameSymbolClicked && !equalsClicked) {
+    if (rightBegin && symb !== lastSymbolClicked && !equalsClicked) {
       setInput(`${input}${symb}`);
       setOutput(symb);
       setCurrentNumber("0");
       setDecimalClicked(false);
       setZeroReset(false);
-      setSameSymbolClicked(symb);
+      setLastSymbolClicked(symb);
       setEqualsClicked(false);
       setSymbolClicked(true);
-    } else if (rightBegin && symb !== sameSymbolClicked && equalsClicked) {
+    } else if (rightBegin && symb !== lastSymbolClicked && equalsClicked) {
       const resultAfterEquals = /(?<==)\d*/.exec(input);
       setInput(`${resultAfterEquals}${symb}`);
       setOutput(symb);
       setCurrentNumber(resultAfterEquals);
       setDecimalClicked(true);
       setZeroReset(true);
-      setSameSymbolClicked(symb);
+      setLastSymbolClicked(symb);
       setEqualsClicked(false);
       setSymbolClicked(true);
     } else {
@@ -114,7 +117,7 @@ const Calculator = () => {
     setEqualsClicked(false);
     setRightBegin(false);
     setZeroReset(false);
-    setSameSymbolClicked("");
+    setLastSymbolClicked("");
     setSymbolClicked(false);
   };
 
@@ -170,13 +173,13 @@ const Calculator = () => {
       setDecimalClicked(true);
       setRightBegin(true);
       setZeroReset(false);
-      setSameSymbolClicked("");
+      setLastSymbolClicked("");
       setEqualsClicked(true);
     }
   };
 
   return (
-    <>
+    <div style={{ display: "flex" }}>
       <h2>React prog #1: Calculator</h2>
       <div id="calculator">
         <div id="display-wrap">
@@ -254,7 +257,24 @@ const Calculator = () => {
           </button>
         </div>
       </div>
-    </>
+      <div
+        style={{
+          fontSize: "5px",
+          color: "black",
+        }}
+      >
+        <p>Input:{input}</p>
+        <p>Output:{output}</p>
+        <p>CurrentNum:{currentNumber}</p>
+        <p>DecimalClick:{decimalClicked ? "true" : "false"}</p>
+        <p>CurrentNum: {currentNumber}</p>
+        <p>EqualsClick: {equalsClicked ? "true" : "false"}</p>
+        <p>RightBeg: {rightBegin ? "true" : "false"}</p>
+        <p>ZeroReset: {zeroReset ? "true" : "false"}</p>
+        <p>lastSymbolClick: {lastSymbolClicked}</p>
+        <p>SymbolClicked: {symbolClicked ? "true" : "false"}</p>{" "}
+      </div>
+    </div>
   );
 };
 
