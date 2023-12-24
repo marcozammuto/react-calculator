@@ -14,7 +14,7 @@ const Calculator = () => {
 
   const addNum = (num) => {
     if (num && zeroReset) {
-      console.log("Zero error");
+      null;
     } else {
       let arr = [input];
       if (arr[0] === "0") {
@@ -22,8 +22,8 @@ const Calculator = () => {
       }
       arr.push(num);
       let result = arr.join("");
-      if (result.includes("=")) {
-        result = result[result.length - 1];
+      if (input.includes("=")) {
+        setOutput(0);
       }
       const lastNumRegex = /\d+$/;
       let lastNum = result.match(lastNumRegex);
@@ -93,7 +93,6 @@ const Calculator = () => {
       setSymbolClicked(true);
     } else if (rightBegin && symb !== sameSymbolClicked && equalsClicked) {
       const resultAfterEquals = /(?<==)\d*/.exec(input);
-      console.log(resultAfterEquals);
       setInput(`${resultAfterEquals}${symb}`);
       setOutput(symb);
       setCurrentNumber(resultAfterEquals);
@@ -120,55 +119,60 @@ const Calculator = () => {
   };
 
   const equals = () => {
-    let amount = input;
-    let pointFilter = "";
-    if (amount.includes("=")) {
-      amount = amount.replace("=", "");
-    }
-    const dotRegex = /\.{2,}/g;
-    if (amount.match(dotRegex)) {
-      pointFilter = amount.replace(dotRegex, ".");
-    } else {
-      pointFilter = amount;
-    }
-    const multipleDotsRegex = /(?<=\d\.\d)\.(?=\d)/g;
-    if (pointFilter.match(multipleDotsRegex)) {
-      pointFilter = pointFilter.replace(multipleDotsRegex, "");
-    }
-    const commaZeroRegex = /\.0/g;
-    if (pointFilter.match(commaZeroRegex)) {
-      let result = `${eval(pointFilter)}.0`;
-      setOutput(result);
-      setZeroReset(true);
-    }
-    const multipleOperatorsRegex = /(?<=\d)[+*-\/]{2,}(?=\d)/g;
-    let match = pointFilter.match(multipleOperatorsRegex);
-    if (match) {
-      let stringer = match.toString();
-      if (stringer.endsWith("+")) {
-        pointFilter = pointFilter.replace(multipleOperatorsRegex, "+");
-      } else if (stringer.endsWith("*")) {
-        pointFilter = pointFilter.replace(multipleOperatorsRegex, "*");
-      } else if (stringer.endsWith("/")) {
-        pointFilter = pointFilter.replace(multipleOperatorsRegex, "/");
+    if (!output && equalsClicked) {
+      setOutput(0);
+      setInput(0);
+    } else if (input && !equalsClicked) {
+      let amount = input;
+      let pointFilter = "";
+      if (amount.includes("=")) {
+        amount = amount.replace("=", "");
       }
-    }
-    let result = eval(pointFilter);
+      const dotRegex = /\.{2,}/g;
+      if (amount.match(dotRegex)) {
+        pointFilter = amount.replace(dotRegex, ".");
+      } else {
+        pointFilter = amount;
+      }
+      const multipleDotsRegex = /(?<=\d\.\d)\.(?=\d)/g;
+      if (pointFilter.match(multipleDotsRegex)) {
+        pointFilter = pointFilter.replace(multipleDotsRegex, "");
+      }
+      const commaZeroRegex = /\.0/g;
+      if (pointFilter.match(commaZeroRegex)) {
+        let result = `${eval(pointFilter)}.0`;
+        setOutput(result);
+        setZeroReset(true);
+      }
+      const multipleOperatorsRegex = /(?<=\d)[+*-\/]{2,}(?=\d)/g;
+      let match = pointFilter.match(multipleOperatorsRegex);
+      if (match) {
+        let stringer = match.toString();
+        if (stringer.endsWith("+")) {
+          pointFilter = pointFilter.replace(multipleOperatorsRegex, "+");
+        } else if (stringer.endsWith("*")) {
+          pointFilter = pointFilter.replace(multipleOperatorsRegex, "*");
+        } else if (stringer.endsWith("/")) {
+          pointFilter = pointFilter.replace(multipleOperatorsRegex, "/");
+        }
+      }
+      let result = eval(pointFilter);
 
-    const zeroCommaRegex = /^0\./;
-    if (pointFilter.match(zeroCommaRegex)) {
-      result = `0${pointFilter}`;
-      setInput(result);
-    }
+      const zeroCommaRegex = /^0\./;
+      if (pointFilter.match(zeroCommaRegex)) {
+        result = `0${pointFilter}`;
+        setInput(result);
+      }
 
-    setInput(`${pointFilter}=${result}`);
-    setOutput(result);
-    setCurrentNumber(result);
-    setDecimalClicked(true);
-    setRightBegin(true);
-    setZeroReset(true);
-    setSameSymbolClicked("");
-    setEqualsClicked(true);
+      setInput(`${pointFilter}=${result}`);
+      setOutput(result);
+      setCurrentNumber(result);
+      setDecimalClicked(true);
+      setRightBegin(true);
+      setZeroReset(false);
+      setSameSymbolClicked("");
+      setEqualsClicked(true);
+    }
   };
 
   return (
