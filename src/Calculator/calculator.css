@@ -1,0 +1,145 @@
+:root {
+  --background-color: #f0f0f0;
+  --black-color: #1a1a1a;
+  --green-color: #1e8449;
+  --yellow-color: #fbc531;
+  --ac-color: #e74c3c;
+  --operator-color: #34495e;
+  --unit-color: #2c3e50;
+  --equal-color: #2980b9;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+* {
+  font-size: 1.2rem;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background-color);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* #1: general container */
+
+#calculator {
+  background-color: #f0f0f0;
+  border: 10px solid #d0d0d0;
+  border-radius: 20px;
+  box-shadow: 0 0 15px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* display */
+#display-wrap {
+  background-color: var(--black-color);
+  border-radius: 15px;
+  padding: 10px;
+  box-shadow: 0 0 10px var(--shadow-color);
+  margin-bottom: 10px;
+  width: 400px;
+}
+
+#display,
+#input {
+  padding-right: 20px;
+  text-align: right;
+}
+
+#input {
+  color: orange;
+  font-size: 24px;
+}
+
+#display {
+  font-size: 38px;
+  color: white;
+}
+
+/* keyboard */
+
+#keyboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  margin-top: 20px;
+}
+
+button {
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 15px;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+/* numbers style */
+
+.unit {
+  background-color: var(--unit-color);
+}
+
+.unit:hover,
+.operator:hover {
+  color: orange;
+  background-color: #37444c;
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+
+.unit,
+.operator {
+  width: 80px;
+  height: 80px;
+}
+
+#decimal {
+  background-color: var(--yellow-color);
+}
+
+/* big buttons style */
+
+#equals,
+#clear {
+  grid-column: span 2;
+  width: 160px;
+  height: 80px;
+}
+
+#equals {
+  background-color: var(--equal-color);
+}
+
+#clear {
+  background-color: var(--ac-color);
+}
+
+/* operator style */
+
+.operator {
+  background-color: var(--operator-color);
+}
+
+#author {
+  background-color: var(--green-color);
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px;
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+
+#author-link {
+  font-size: 15px;
+  text-align: right;
+}
