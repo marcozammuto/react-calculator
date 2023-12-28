@@ -176,6 +176,7 @@ const Calculator = () => {
       setLastSymbolClicked("");
       setEqualsClicked(true);
     }
+    
   };
 
   return (
