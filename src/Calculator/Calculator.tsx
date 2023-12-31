@@ -176,7 +176,7 @@ const Calculator = () => {
       setLastSymbolClicked("");
       setEqualsClicked(true);
     }
-    // restart-
+    // restart-done
   };
 
   return (
